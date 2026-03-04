@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CheckCircle, XCircle, Smartphone } from "lucide-react";
 import { toast } from "sonner";
+import { Suspense } from "react";
 
 const DeviceApprovalPage = () => {
   const { data, isPending } = authClient.useSession();
@@ -206,4 +207,10 @@ const DeviceApprovalPage = () => {
 )
 }
 
-export default DeviceApprovalPage;
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center"><Spinner/></div>}>
+      <DeviceApprovalPage />
+    </Suspense>
+  );
+}
