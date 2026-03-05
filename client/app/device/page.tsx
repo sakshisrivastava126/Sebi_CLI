@@ -1,13 +1,14 @@
 "use client"
 import { authClient } from "@/lib/auth-client"
 import type React from "react"
-
+import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { ShieldAlert } from "lucide-react"
 
-export default function DeviceAuthorizationPage() {
-  const [userCode, setUserCode] = useState("")
+function DeviceAuthorizationContent() {
+  const searchParams = useSearchParams()
+  const [userCode, setUserCode] = useState(searchParams.get("user_code") || "")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -18,14 +19,15 @@ export default function DeviceAuthorizationPage() {
     setIsLoading(true)
 
     try {
-      const formattedCode = userCode.trim().replace(/-/g, "").toUpperCase()
-
-      const response = await authClient.device({
-        query: { user_code: formattedCode },
+      const formattedCode = userCode.trim().toUpperCase()
+      const response = await authClient.device.code({
+        client_id: formattedCode,
       })
 
       if (response.data) {
         router.push(`/approve?user_code=${formattedCode}`)
+      } else {
+        setError("Invalid or expired code")
       }
     } catch (err) {
       setError("Invalid or expired code")
@@ -45,7 +47,6 @@ export default function DeviceAuthorizationPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
-        {/* Header Section */}
         <div className="flex flex-col items-center gap-4 mb-8">
           <div className="p-3 rounded-lg border-2 border-dashed border-zinc-700">
             <ShieldAlert className="w-8 h-8 text-yellow-300" />
@@ -55,14 +56,11 @@ export default function DeviceAuthorizationPage() {
             <p className="text-muted-foreground">Enter your device code to continue</p>
           </div>
         </div>
-
-        {/* Form Card */}
         <form
           onSubmit={handleSubmit}
           className="border-2 border-dashed border-zinc-700 rounded-xl p-8 bg-zinc-950 backdrop-blur-sm"
         >
           <div className="space-y-6">
-            {/* Code Input */}
             <div>
               <label htmlFor="code" className="block text-sm font-medium text-foreground mb-2">
                 Device Code
@@ -78,31 +76,27 @@ export default function DeviceAuthorizationPage() {
               />
               <p className="text-xs text-muted-foreground mt-2">Find this code on the device you want to authorize</p>
             </div>
-
-            {/* Error Message */}
             {error && (
               <div className="p-3 rounded-lg bg-red-950 border border-red-900 text-red-200 text-sm">{error}</div>
             )}
-
-            {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading || userCode.length < 9}
+              disabled={isLoading || userCode.length < 8}
               className="w-full py-3 px-4 bg-zinc-100 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? "Verifying..." : "Continue"}
             </button>
-
-            {/* Info Box */}
-            <div className="p-4 bg-zinc-900 border-2 border-dashed border-zinc-700 rounded-lg">
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                This code is unique to your device and will expire shortly. Keep it confidential and never share it with
-                anyone.
-              </p>
-            </div>
           </div>
         </form>
       </div>
     </div>
+  )
+}
+
+export default function DeviceAuthorizationPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <DeviceAuthorizationContent />
+    </Suspense>
   )
 }
