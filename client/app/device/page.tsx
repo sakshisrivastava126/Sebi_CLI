@@ -19,7 +19,7 @@ function DeviceAuthorizationContent() {
     setIsLoading(true)
 
     try {
-      const formattedCode = userCode.trim().toUpperCase()
+      const formattedCode = userCode.trim().replace(/-/g, "").toUpperCase()
       const response = await authClient.device.code({
         client_id: formattedCode,
       })
