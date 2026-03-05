@@ -11,12 +11,15 @@ export const auth = betterAuth({
     }),
     basePath:"/api/auth",
     trustedOrigins:["http://localhost:3000",
-    "https://your-vercel-app.vercel.app"
+    "https://sebicli-production.up.railway.app",
     ],
     plugins: [
-        deviceAuthorization({ 
-        verificationUri: "/device", 
-        }), 
+        deviceAuthorization({
+            verificationUri: `${process.env.BETTER_AUTH_URL}/device`,
+            clientId: "sebi-cli",        
+            expiresIn: 600,              
+            pollingInterval: 5,
+        }),
     ],
     socialProviders:{
         github:{
