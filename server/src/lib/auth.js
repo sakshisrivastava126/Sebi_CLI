@@ -10,7 +10,9 @@ export const auth = betterAuth({
         provider: "postgresql", // or "mysql", "postgresql", ...etc
     }),
     basePath:"/api/auth",
-    trustedOrigins:["http://localhost:3000"],
+    trustedOrigins:["http://localhost:3000",
+    "https://your-vercel-app.vercel.app"
+    ],
     plugins: [
         deviceAuthorization({ 
         verificationUri: "/device", 
