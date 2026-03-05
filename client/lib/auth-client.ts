@@ -1,9 +1,9 @@
 import {createAuthClient} from "better-auth/react"
-import {deviceAuthorization} from "better-auth/plugins"
+import {deviceAuthorizationClient} from "better-auth/client/plugins"
 
 export const authClient = createAuthClient({
-    baseURL:"https://sebicli-production.up.railway.app",
-    plugins:[
-        deviceAuthorization()
-    ]
+  baseURL: "https://sebicli-production.up.railway.app",
+  plugins: [
+    deviceAuthorizationClient()  
+  ]
 })

@@ -8,3 +8,4 @@ export default function ApproveContent() {
 
   return <div>Token: {token}</div>;
 }
+

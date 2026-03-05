@@ -20,9 +20,7 @@ export default function DeviceAuthorizationPage() {
     try {
       const formattedCode = userCode.trim().replace(/-/g, "").toUpperCase()
 
-      // Replace with the correct method for device authorization, e.g., authClient.signIn.device or similar
-      // If such a method does not exist, implement it in authClient or use a generic request method
-      const response = await authClient.signIn.device({
+      const response = await authClient.device({
         query: { user_code: formattedCode },
       })
 
