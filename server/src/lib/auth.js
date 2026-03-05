@@ -16,7 +16,7 @@ export const auth = betterAuth({
     ],
     plugins: [
         deviceAuthorization({
-            verificationUri: `${process.env.BETTER_AUTH_URL}/device`,
+            verificationUri: "https://sebicli-production.up.railway.app/device",
             // clientId: "sebi-cli",        
             expiresIn: "10m",              
             pollingInterval: 5,
