@@ -19,7 +19,9 @@ export const auth = betterAuth({
             verificationUri: "https://sebicli-production.up.railway.app/device",
             // clientId: "sebi-cli",        
             expiresIn: "10m",              
-            pollingInterval: 5,
+            validateClient: async (clientId) => {
+                return clientId === "sebi-cli";
+            },
         }),
     ],
     socialProviders:{
