@@ -17,7 +17,7 @@ export const auth = betterAuth({
         deviceAuthorization({
             verificationUri: `${process.env.BETTER_AUTH_URL}/device`,
             clientId: "sebi-cli",        
-            expiresIn: 600,              
+            expiresIn: "10m",              
             pollingInterval: 5,
         }),
     ],
