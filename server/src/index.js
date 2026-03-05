@@ -34,7 +34,7 @@ app.get("/api/me", async (req, res) => {
 app.get("/device", async(req, res)=>{
   const {user_code} = req.query
   const frontend =
-    process.env.FRONTEND || "https://sebicli-frontend-production.up.railway.app";
+    process.env.FRONTEND || "https://sebi-cli.vercel.app";
 
   res.redirect(`${frontend}/device?user_code=${user_code}`);
 })
