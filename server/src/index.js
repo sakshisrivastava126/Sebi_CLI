@@ -3,6 +3,10 @@ import dotenv from "dotenv";
 import { toNodeHandler, fromNodeHeaders} from "better-auth/node"
 import cors from "cors";
 import {auth} from "./lib/auth.js"
+import { webcrypto } from "crypto";
+if (!globalThis.crypto) {
+  globalThis.crypto = webcrypto;
+}
 
 dotenv.config();
 
