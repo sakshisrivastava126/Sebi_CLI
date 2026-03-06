@@ -13,28 +13,36 @@ function DeviceAuthorizationContent() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
-    setIsLoading(true)
-
-    try {
-      const formattedCode = userCode.trim().replace(/-/g, "").toUpperCase()
-      const response = await authClient.device.code({
-        client_id: formattedCode,
-      })
-
-      if (response.data) {
-        router.push(`/approve?user_code=${formattedCode}`)
-      } else {
-        setError("Invalid or expired code")
-      }
-    } catch (err) {
-      setError("Invalid or expired code")
-    } finally {
-      setIsLoading(false)
-    }
+    const formattedCode = userCode.trim().replace(/-/g, "").toUpperCase()
+    router.push(`/approve?user_code=${formattedCode}`)
   }
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   setError(null)
+  //   setIsLoading(true)
+
+  //   try {
+  //     const formattedCode = userCode.trim().replace(/-/g, "").toUpperCase()
+  //     // const response = await authClient.device.code({
+  //     //   client_id: formattedCode,
+  //     // })
+
+  //     // if (response.data) {
+  //     //   router.push(`/approve?user_code=${formattedCode}`)
+  //     // } else {
+  //     //   setError("Invalid or expired code")
+  //     // }
+  //     router.push(`/approve?user_code=${formattedCode}`)
+  //   }
+  //    catch (err) {
+  //     setError("Invalid or expired code")
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "")
