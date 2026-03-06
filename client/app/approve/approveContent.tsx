@@ -11,7 +11,7 @@
 
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { CheckCircle, XCircle } from "lucide-react";
 
@@ -21,6 +21,16 @@ export default function ApproveContent() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await authClient.getSession();
+      if (!session.data) {
+        router.push(`/sign-in?callbackURL=/approve?user_code=${userCode}`);
+      }
+    };
+    checkSession();
+  }, [userCode, router]);
 
   const handleApprove = async () => {
     setIsLoading(true);

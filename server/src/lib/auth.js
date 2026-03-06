@@ -16,7 +16,7 @@ export const auth = betterAuth({
     ],
     plugins: [
         deviceAuthorization({
-            verificationUri: "https://sebi-cli.vercel.app/device",
+            verificationUri: "https://sebi-cli.vercel.app/sign-in",
             // clientId: "sebi-cli",        
             expiresIn: "10m",              
             validateClient: async (clientId) => {

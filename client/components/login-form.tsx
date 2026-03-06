@@ -39,10 +39,16 @@ export const LoginForm = ()=>{
                 variant={"outline"}
                 className="w-full h-full"
                 type="button"
-                onClick={() => authClient.signIn.social({
-                  provider: "github",
-                  callbackURL: "https://sebicli-production.up.railway.app"
-                })}
+                onClick={() => {
+                  const userCode = new URLSearchParams(window.location.search).get("user_code") || 
+                                  new URLSearchParams(window.location.search).get("callbackURL")?.split("user_code=")[1];
+                  authClient.signIn.social({
+                    provider: "github",
+                    callbackURL: userCode 
+                      ? `https://sebi-cli.vercel.app/approve?user_code=${userCode}`
+                      : "https://sebi-cli.vercel.app"
+                  })
+                }}
                
               >
                 <Image src={"/github.svg"} alt="Github" height={16} width={16} className="size-4 dark:invert" />
