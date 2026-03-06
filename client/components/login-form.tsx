@@ -39,15 +39,28 @@ export const LoginForm = ()=>{
                 variant={"outline"}
                 className="w-full h-full"
                 type="button"
-                onClick={() => {
-                  const userCode = new URLSearchParams(window.location.search).get("user_code") || 
-                                  new URLSearchParams(window.location.search).get("callbackURL")?.split("user_code=")[1];
-                  authClient.signIn.social({
-                    provider: "github",
-                    callbackURL: userCode 
-                      ? `https://sebi-cli.vercel.app/approve?user_code=${userCode}`
-                      : "https://sebi-cli.vercel.app"
-                  })
+                disabled={isLoading}
+                onClick={async () => {
+                  try {
+                    setIsLoading(true);
+                    const userCode = new URLSearchParams(window.location.search).get("user_code") || 
+                                    new URLSearchParams(window.location.search).get("callbackURL")?.split("user_code=")[1];
+                    const { data, error } = await authClient.signIn.social({
+                      provider: "github",
+                      callbackURL: userCode 
+                        ? `https://sebi-cli.vercel.app/approve?user_code=${userCode}`
+                        : "https://sebi-cli.vercel.app"
+                    });
+                    
+                    if (error) {
+                      toast.error(error.message || "Failed to login with GitHub");
+                    }
+                  } catch (err) {
+                    toast.error("An unexpected error occurred during login");
+                    console.error(err);
+                  } finally {
+                    setIsLoading(false);
+                  }
                 }}
                
               >

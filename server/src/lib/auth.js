@@ -11,6 +11,7 @@ export const auth = betterAuth({
     }),
     basePath:"/api/auth",
     trustedOrigins:["http://localhost:3000",
+        "https://sebi-cli.vercel.app",
     "https://sebicli-production.up.railway.app",
     "https://sebicli-frontend-production.up.railway.app",
     ],
