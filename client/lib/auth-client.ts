@@ -3,7 +3,7 @@ import {deviceAuthorizationClient} from "better-auth/client/plugins"
 
 export const authClient = createAuthClient({
   // baseURL: "https://sebicli-production.up.railway.app",
-  baseURL: "http://localhost:3005",
+  baseURL: "https://sebicli-production.up.railway.app",
   plugins: [
     deviceAuthorizationClient()  
   ]
