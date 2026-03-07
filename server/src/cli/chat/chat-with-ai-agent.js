@@ -2,8 +2,6 @@ import chalk from "chalk";
 import boxen from "boxen";
 import { text, isCancel, confirm, cancel, intro, outro, multiselect } from "@clack/prompts";
 import yoctoSpinner from "yocto-spinner";
-import { marked } from "marked";
-import { markedTerminal } from "marked-terminal";
 import { AIService } from "../ai/google-service.js";
 import { ChatService } from "../../services/chat.service.js";
 import { getStoredToken } from "../commands/auth/login.js";
@@ -17,7 +15,7 @@ async function getUserFromToken() {
   const token = await getStoredToken();
   
   if (!token?.access_token) {
-    throw new Error("Not authenticated. Please run 'orbit login' first.");
+    throw new Error("Not authenticated. Please run 'sebi login' first.");
   }
 
   const user = await prisma.user.findFirst({

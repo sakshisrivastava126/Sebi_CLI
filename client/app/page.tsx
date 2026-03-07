@@ -68,7 +68,7 @@ export default function Home() {
                 },
               })
             }
-            className="w-full h-11 bg-red-450 hover:bg-red-500 text-white font-semibold rounded-lg transition-colors"
+            className="w-full h-11 bg-red-500 hover:bg-red-500 text-white font-semibold rounded-lg transition-colors"
           >
             Sign Out
           </Button>

@@ -10,15 +10,15 @@ import os from "os";
 import path from "path";
 import yoctoSpinner from "yocto-spinner";
 import * as z from "zod/v4";
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
 import prisma from "../../../lib/db.js";
 
-// dotenv.config();
+dotenv.config();
 
-// const DEMO_URL = "https://localhost:3005";
+// const DEMO_URL = process.env.AUTH_SERVER_URL || "http://localhost:3005";
 const DEMO_URL = "https://sebicli-production.up.railway.app/api/auth";
-const CLIENT_ID = "sebi-cli";
-// const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+// const CLIENT_ID = "sebi-cli";
+const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 
 const CONFIG_DIR = path.join(os.homedir(), ".better-auth");
 const TOKEN_FILE = path.join(CONFIG_DIR, "token.json");

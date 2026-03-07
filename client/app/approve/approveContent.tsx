@@ -1,15 +1,5 @@
-// "use client";
-
-// import { useSearchParams } from "next/navigation";
-
-// export default function ApproveContent() {
-//   const searchParams = useSearchParams();
-//   const token = searchParams.get("token");
-
-//   return <div>Token: {token}</div>;
-// }
-
 "use client";
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
@@ -17,32 +7,49 @@ import { CheckCircle, XCircle } from "lucide-react";
 
 export default function ApproveContent() {
   const searchParams = useSearchParams();
-  const userCode = searchParams.get("user_code");
   const router = useRouter();
+  const userCode = searchParams.get("user_code");
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Check if user is authenticated
   useEffect(() => {
     const checkSession = async () => {
       const session = await authClient.getSession();
-      if (!session.data) {
+
+      if (!session?.data) {
         router.push(`/sign-in?callbackURL=/approve?user_code=${userCode}`);
       }
     };
-    checkSession();
+
+    if (userCode) {
+      checkSession();
+    }
   }, [userCode, router]);
+
+  // If device code missing
+  if (!userCode) {
+    return (
+      <div className="flex h-screen items-center justify-center text-red-500">
+        Invalid device authorization request
+      </div>
+    );
+  }
 
   const handleApprove = async () => {
     setIsLoading(true);
     setError(null);
+
     try {
       const response = await authClient.device.approve({
-        userCode: userCode!,
+        userCode: userCode,
       });
-      if (response.data) {
+
+      if (response?.data) {
         router.push("/approve/success");
       } else {
-        setError("Failed to approve. Please try again.");
+        setError("Failed to approve device.");
       }
     } catch (err) {
       setError("Something went wrong.");
@@ -52,32 +59,46 @@ export default function ApproveContent() {
   };
 
   const handleDeny = async () => {
-  await authClient.device.deny({
-    userCode: userCode!,
-  });
-  router.push("/");
+    try {
+      await authClient.device.deny({
+        userCode: userCode,
+      });
+    } catch (err) {}
+
+    router.push("/");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md border-2 border-dashed border-zinc-700 rounded-xl p-8 bg-zinc-950 text-center">
-        <h1 className="text-2xl font-bold text-foreground mb-2">Authorize Device</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-2">
+          Authorize Device
+        </h1>
+
         <p className="text-muted-foreground mb-6">
-          Allow <span className="text-white font-semibold">Sebi CLI</span> to access your account?
+          Allow <span className="text-white font-semibold">Sebi CLI</span> to
+          access your account?
         </p>
-        <p className="font-mono text-lg tracking-widest text-yellow-300 mb-8">{userCode}</p>
+
+        <p className="font-mono text-lg tracking-widest text-yellow-300 mb-8">
+          {userCode}
+        </p>
+
         {error && (
           <div className="p-3 rounded-lg bg-red-950 border border-red-900 text-red-200 text-sm mb-4">
             {error}
           </div>
         )}
+
         <div className="flex gap-4">
           <button
             onClick={handleDeny}
             className="flex-1 py-3 px-4 border-2 border-dashed border-zinc-700 text-zinc-300 font-semibold rounded-lg hover:bg-zinc-900 transition-colors flex items-center justify-center gap-2"
           >
-            <XCircle className="w-4 h-4" /> Deny
+            <XCircle className="w-4 h-4" />
+            Deny
           </button>
+
           <button
             onClick={handleApprove}
             disabled={isLoading}

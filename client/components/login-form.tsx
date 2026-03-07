@@ -43,13 +43,18 @@ export const LoginForm = ()=>{
                 onClick={async () => {
                   try {
                     setIsLoading(true);
-                    const userCode = new URLSearchParams(window.location.search).get("user_code") || 
-                                    new URLSearchParams(window.location.search).get("callbackURL")?.split("user_code=")[1];
+                    const params = new URLSearchParams(window.location.search);
+                    const userCode = params.get("user_code");
+                    // const userCode = new URLSearchParams(window.location.search).get("user_code") || 
+                    //                 new URLSearchParams(window.location.search).get("callbackURL")?.split("user_code=")[1];
                     const { data, error } = await authClient.signIn.social({
                       provider: "github",
                       callbackURL: userCode 
                         ? `https://sebi-cli.vercel.app/approve?user_code=${userCode}`
                         : "https://sebi-cli.vercel.app"
+                      // callbackURL: userCode
+                      // ? `http://localhost:8080/approve?user_code=${userCode}`
+                      // : "http://localhost:8080"
                     });
                     
                     if (error) {

@@ -44,7 +44,7 @@ async function getUserFromToken() {
   const token = await getStoredToken();
   
   if (!token?.access_token) {
-    throw new Error("Not authenticated. Please run 'orbit login' first.");
+    throw new Error("Not authenticated. Please run 'sebi login' first.");
   }
 
   const spinner = yoctoSpinner({ text: "Authenticating..." }).start();
@@ -74,24 +74,24 @@ async function selectTools(){
         hint: tool.description
     }))
 
-    const selectTools = await multiselect({
+    const selectedTools = await multiselect({
         message:chalk.cyan("Select tools to enable (Space to select, Enter to confirm): "),
         options: toolOptions,
         required: false,
     })
 
-    if(isCancel(selectTools)){
+    if(isCancel(selectedTools)){
         cancel(chalk.yellow("Tool selection cancelled"))
         process.exit(0)
     }
 
-    enableTools(selectTools)
-    if(selectTools.length === 0){
+    enableTools(selectedTools)
+    if(selectedTools.length === 0){
         console.log(chalk.yellow("\n⚠️ No tools selected. AI will work without tools.\n"));
     }
     else{
         const toolsBox = boxen(
-        chalk.green(`✅ Enabled tools:\n${selectTools.map(id => {
+        chalk.green(`✅ Enabled tools:\n${selectedTools.map(id => {
             const tool = availableTools.find(t => t.id === id);
             return `  • ${tool.name}`;
         }).join('\n')}`),
@@ -107,7 +107,7 @@ async function selectTools(){
         console.log(toolsBox);
     }
 
-  return selectTools.length > 0;
+  return selectedTools.length > 0;
 }
 
 
